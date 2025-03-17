@@ -11,7 +11,7 @@ import sys
 
 CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../config"))
 sys.path.insert(0, CONFIG_PATH)
-from config import MOVIES_TXT, MOVIES_DB, BACKUP_FOLDER, TMDB_API_KEY, MAX_BACKUPS
+from config import MOVIES_TXT, MOVIES_DB, POSTER_DIR, BACKUP_FOLDER, TMDB_API_KEY, MAX_BACKUPS
 
 # ✅ TMDb API Configuration
 tmdb = TMDb()
