@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ movie.name }} - Details</title>
+
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #222;
+        color: white;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background: #333;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    .poster-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .poster {
+        width: 300px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .movie-info {
+        text-align: left;
+        margin-top: 20px;
+    }
+
+    .movie-info p {
+        font-size: 16px;
+        margin: 8px 0;
+    }
+
+    .highlight {
+        font-weight: bold;
+        color: lightblue;
+    }
+
+    /* Play Button */
+    .play-button {
+        background-color: #e50914;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: background 0.3s ease;
+    }
+
+    .play-button:hover {
+        background-color: #ff1c1c;
+    }
+
+    /* Floating Message */
+    #message {
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: lightgreen;
+        color: black;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 15px 25px;
+        border-radius: 8px;
+        display: none;
+        z-index: 1000;
+        text-align: center;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+
+</head>
+<body>
+
+<div class="container">
+    <h1>{{ movie.name }} ({{ movie.year }})</h1>
+
+    <div class="poster-container">
+        <img src="{{ url_for('serve_poster', filename=movie.poster) }}" alt="{{ movie.name }}" class="poster">
+    </div>
+
+    <div class="movie-info">
+        <p><span class="highlight">Overview:</span> {{ movie.get("overview", "No overview available") }}</p>
+        <p><span class="highlight">Genres:</span> {{ movie.get("genres", []) | join(", ") }}</p>
+        <p><span class="highlight">Directors:</span> {{ movie.get("directors", []) | join(", ") }}</p>
+        <p><span class="highlight">Cast:</span> {{ movie.get("actors", []) | join(", ") }}</p>
+        <p><span class="highlight">Runtime:</span> 
+          {% if movie.get("runtime") %}
+          {{ (movie["runtime"] // 60) }}h {{ (movie["runtime"] % 60) }}m
+          {% else %}
+           No available
+          {% endif %}
+        </p>
+       <p><span class="highlight">Revenue:</span> 
+         {% if movie.get("revenue") %}
+          ${{ "{:,.0f}".format(movie["revenue"]) }}
+         {% else %}
+          No available
+         {% endif %}
+        </p>
+        <p><span class="highlight">Release Date:</span> {{ movie.get("release_date", "No available") }}</p>
+        <p><span class="highlight">Rating:</span> ⭐ {{ movie.get("rating", "No available") }}</p>
+    </div>
+
+    <button class="play-button" onclick="playMovie('{{ movie.file_name }}')">▶ Play Movie</button>
+</div>
+
+<!-- Floating message -->
+<div id="message"></div>
+
+<script>
+function playMovie(movieFile) {
+    fetch(`/play_video/${movieFile}`)
+      .then(response => response.json())
+      .then(data => {
+          var messageDiv = document.getElementById('message');
+
+          // Set message text and background color
+          messageDiv.textContent = data.message;
+          messageDiv.style.backgroundColor = (data.status === 'success') ? 'lightgreen' : 'lightcoral';
+          messageDiv.style.display = 'inline-block';
+
+          // Hide message after 5 seconds
+          setTimeout(() => {
+              messageDiv.style.display = 'none';
+          }, 5000);
+      })
+      .catch(error => {
+          var messageDiv = document.getElementById('message');
+          messageDiv.textContent = "Error: Could not contact server. Please try again later.";
+          messageDiv.style.backgroundColor = 'lightcoral';
+          messageDiv.style.display = 'inline-block';
+
+          // Hide message after 8 seconds
+          setTimeout(() => {
+              messageDiv.style.display = 'none';
+          }, 8000);
+      });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,3 @@
+tinydb
+tmdbv3api
+flask
