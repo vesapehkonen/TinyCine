@@ -9,9 +9,15 @@ Store movies locally using TinyDB
 Search & filter movies by name, year, actors, rating, and genre  
 Automatic poster fetching  
 Simple **Flask-based** web interface  
-**Backup system** to protect movie data  
 
----
+## Using Git LFS
+This repository uses **Git Large File Storage (LFS)** for handling large media files.  
+Currently, **only `sample_movie.mp4` is stored using Git LFS**.
+If you haven't installed Git LFS yet, please do so before cloning:
+```sh
+sudo apt install git-lfs
+git lfs install
+```
 
 ##  Installation
 ### 1. Clone the Repository
