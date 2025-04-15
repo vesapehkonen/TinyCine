@@ -1,6 +1,6 @@
 #!/bin/bash
 # play_video.sh
-# Run mplayer in a new terminal window with specified video and subtitles
+# Run mpv in a new terminal window with specified video and subtitles
 
 # Check if video filename is provided
 if [ -z "$1" ]; then
@@ -14,9 +14,8 @@ VIDEO_PATH="$1"
 # Generate subtitle path by replacing .mp4 with .srt (or adjust for other video formats)
 SUBTITLE_PATH="${VIDEO_PATH%.*}.srt"
 
-# Cache size (in KB) and subtitle scale
-CACHE_SIZE=131072
-SUBTITLE_SCALE=2.0
+# Cache size in seconds
+CACHE_SECONDS=120
 
 # Check if subtitle file exists
 if [ ! -f "$SUBTITLE_PATH" ]; then
@@ -25,9 +24,9 @@ if [ ! -f "$SUBTITLE_PATH" ]; then
   SUBTITLE_OPTION=""
 else
   # Use the subtitle path if it exists
-  SUBTITLE_OPTION="-sub '$SUBTITLE_PATH'"
+  SUBTITLE_OPTION="--sub-file=$SUBTITLE_PATH"
 fi
 
-# Run mplayer in a new terminal window
-echo "mplayer -cache $CACHE_SIZE -subfont-text-scale $SUBTITLE_SCALE $SUBTITLE_OPTION $VIDEO_PATH &"
-mplayer -cache $CACHE_SIZE -subfont-text-scale $SUBTITLE_SCALE $SUBTITLE_OPTION $VIDEO_PATH &
+# Run mpv in a new terminal window
+echo "mpv --cache=yes --cache-secs=$CACHE_SECONDS --cache-pause=yes $SUBTITLE_OPTION $VIDEO_PATH &"
+mpv --cache=yes --cache-secs=$CACHE_SECONDS --cache-pause=yes $SUBTITLE_OPTION $VIDEO_PATH &
