@@ -3,6 +3,8 @@
 TinyCine is a **personal movie collection manager** built with **TinyDB & TMDb API**.  
 It allows you to **search, filter, and organize** your movie database easily.
 
+![TinyCine screenshot](./tinycine.png)
+
 ##  Features
 Fetch movie details (title, actors, genres, rating, runtime, etc.) from TMDb  
 Store movies locally using TinyDB  
